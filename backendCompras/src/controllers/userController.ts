@@ -5,8 +5,8 @@ import User from '../models/User';
 // Crear usuario
 export const createUser = async (req: Request, res: Response) => {
   try {
-    const { email, businessName, whatsapp } = req.body;
-    const user = await User.create({ email, businessName, whatsapp });
+    const { userId, email, businessName, whatsapp } = req.body;
+    const user = await User.create({ userId, email, businessName, whatsapp });
     res.status(201).json(user);
   } catch (error) {
     res.status(400).json({ error: 'Error al crear el usuario' });

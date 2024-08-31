@@ -9,7 +9,7 @@ interface PostAttributes {
   imageUrl: string;
   imageUrl1: string;
   imageUrl2: string;
-  size: string;
+  size: string[];
   category: string;
   brand: string;
   color: string;
@@ -25,7 +25,7 @@ class Post extends Model<PostAttributes, PostCreationAttributes> implements Post
   public imageUrl!: string;
   public imageUrl1!: string;
   public imageUrl2!: string;
-  public size!: string;
+  public size!: string[];
   public category!: string;
   public brand!: string;
   public color!: string;
@@ -63,8 +63,8 @@ Post.init(
       allowNull: false,
     },
     size: {
-      type: DataTypes.STRING,
-      allowNull: false,
+      type: DataTypes.ARRAY(DataTypes.STRING), // Define el tipo como un array de strings
+      allowNull: false
     },
     category: {
       type: DataTypes.STRING,
@@ -79,7 +79,7 @@ Post.init(
       allowNull: false,
     },
     userId: {
-      type: DataTypes.UUID,
+      type: DataTypes.STRING,
       allowNull: false,
     },
   },

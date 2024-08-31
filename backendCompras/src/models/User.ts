@@ -4,16 +4,16 @@ import sequelize from '../config/database';
 import Post from './Post';
 
 interface UserAttributes {
-  id: string;
+  userId: string;
   email: string;
   businessName: string;
   whatsapp: string;
 }
 
-interface UserCreationAttributes extends Optional<UserAttributes, 'id'> {}
+//interface UserCreationAttributes extends Optional<UserAttributes, 'id'> {}
 
-class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
-  public id!: string;
+class User extends Model<UserAttributes> implements UserAttributes {
+  public userId!: string;
   public email!: string;
   public businessName!: string;
   public whatsapp!: string;
@@ -24,9 +24,8 @@ class User extends Model<UserAttributes, UserCreationAttributes> implements User
 
 User.init(
   {
-    id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
+    userId: {
+      type: DataTypes.STRING,
       primaryKey: true,
     },
     email: {

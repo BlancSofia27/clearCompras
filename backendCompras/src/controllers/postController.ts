@@ -12,6 +12,11 @@ export const createPost = async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Faltan campos requeridos' });
     }
 
+    // Asegurarse de que `size` es un array
+    if (!Array.isArray(size)) {
+      return res.status(400).json({ error: 'El campo size debe ser un array' });
+    }
+
     const post = await Post.create({
       title,
       price,
@@ -88,5 +93,34 @@ export const deletePost = async (req: Request, res: Response) => {
     res.status(200).json({ message: 'Post eliminado' });
   } catch (error) {
     res.status(500).json({ error: 'Error al eliminar el post' });
+  }
+};
+
+/**
+ * Obtiene todos los posts para un usuario específico.
+ * @param {Request} req - La solicitud HTTP.
+ * @param {Response} res - La respuesta HTTP.
+ * @param {NextFunction} next - La función de siguiente middleware.
+ */
+export const getPostsByUserId = async (req: Request, res: Response) => {
+  const { userId } = req.params; // Obtiene userId de los parámetros de la ruta
+
+  try {
+    // Busca los posts en la base de datos por userId usando Sequelize
+    const posts = await Post.findAll({
+      where: { userId: userId }
+    });
+
+    // Verifica si se encontraron posts
+    if (posts.length === 0) {
+      return res.status(404).json({ message: 'No posts found for this user.' });
+    }
+
+    // Envía los posts encontrados en la respuesta
+    res.status(200).json(posts);
+  } catch (error) {
+    // Maneja errores
+    console.error('Error fetching posts:', error);
+    res.status(500).json({ message: 'Server error' });
   }
 };

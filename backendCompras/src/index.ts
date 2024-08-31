@@ -2,15 +2,19 @@ import express from 'express';
 import dotenv from 'dotenv';
 import sequelize from './config/database';
 import routes from './routes/indexRoutes';
+import cors from 'cors'
 // Configurar variables de entorno
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Configurar el middleware CORS
+app.use(cors());
 // Middleware para parsear JSON
 app.use(express.json());
 app.use('/api', routes);
+
 
 // Sincroniza los modelos con la base de datos y arranca el servidor
 sequelize.sync({ alter: true }).then(() => {
