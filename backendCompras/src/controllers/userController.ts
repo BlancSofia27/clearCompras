@@ -5,8 +5,8 @@ import User from '../models/User';
 // Crear usuario
 export const createUser = async (req: Request, res: Response) => {
   try {
-    const { userId, email, businessName, whatsapp } = req.body;
-    const user = await User.create({ userId, email, businessName, whatsapp });
+    const { userId, email, businessName, whatsapp, instagram, logo, header } = req.body;
+    const user = await User.create({ userId, email, businessName, whatsapp, instagram, logo, header });
     res.status(201).json(user);
   } catch (error) {
     res.status(400).json({ error: 'Error al crear el usuario' });
@@ -39,12 +39,12 @@ export const getUserById = async (req: Request, res: Response) => {
 // Actualizar usuario
 export const updateUser = async (req: Request, res: Response) => {
   try {
-    const { email, businessName, whatsapp } = req.body;
+    const { email, businessName, whatsapp, instagram, logo, header } = req.body;
     const user = await User.findByPk(req.params.id);
     if (!user) {
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
-    await user.update({ email, businessName, whatsapp });
+    await user.update({ email, businessName, whatsapp, instagram, logo, header });
     res.status(200).json(user);
   } catch (error) {
     res.status(400).json({ error: 'Error al actualizar el usuario' });

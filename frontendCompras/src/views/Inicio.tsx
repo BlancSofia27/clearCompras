@@ -1,84 +1,23 @@
 // src/views/Inicio.tsx
-import React from 'react';
-import Cards from '../components/Cards';
-
-const posts = [
-  {
-    category:'top',
-    title: 'Camisa Casual corta',
-    price:'$21.000',
-    size:'Unico',
-    imageUrl: 'https://via.placeholder.com/150',
-    brand:'askDenim',
-    color:'Blanco'
-  },
-  {
-    category:'top',
-    title: 'Camisa Casual corta',
-    price:'$21.000',
-    size:'Unico',
-    imageUrl: 'https://via.placeholder.com/150',
-    brand:'askDenim',
-    color:'Blanco'
-  },
-  {
-    category:'top',
-    title: 'Camisa Casual corta',
-    price:'$21.000',
-    size:'Unico',
-    imageUrl: 'https://via.placeholder.com/150',
-    brand:'askDenim',
-    color:'Blanco'
-  },
-  {
-    category:'top',
-    title: 'Camisa Casual corta',
-    price:'$21.000',
-    size:'Unico',
-    imageUrl: 'https://via.placeholder.com/150',
-    brand:'askDenim',
-    color:'Blanco'
-  },
-  {
-    category:'top',
-    title: 'Camisa Casual corta',
-    price:'$21.000',
-    size:'Unico',
-    imageUrl: 'https://via.placeholder.com/150',
-    brand:'askDenim',
-    color:'Blanco'
-  },
-  {
-    category:'top',
-    title: 'Camisa Casual corta',
-    price:'$21.000',
-    size:'Unico',
-    imageUrl: 'https://via.placeholder.com/150',
-    brand:'askDenim',
-    color:'Blanco'
-  },
-  {
-    category:'top',
-    title: 'Camisa Casual corta',
-    price:'$21.000',
-    size:'Unico',
-    imageUrl: 'https://via.placeholder.com/150',
-    brand:'askDenim',
-    color:'Blanco'
-  },
-];
+import React from "react"
+import SesionButton from "../components/SesionButton"
+import PostsList from "../components/PostsList"
+import PanelButton from "../components/PanelButton"
+import ProfileAuth from "../components/ProfileAuth"
 
 const Inicio: React.FC = () => {
   return (
     <>
-    <div className="flex flex-col justify-center aling-center p-4">
-      <h1 className='text-center'>Clear Compras</h1>
-      <h2 className="text-center text-2xl font-bold mb-4">Catálogo</h2>
-    </div>
-      <Cards posts={posts} /> {/* Aquí pasas la propiedad posts */}
-      </>
-  );
-};
+      <div className="flex flex-row justify-between aling-center p-4">
+        <h1 className="text-center">Clear Compras</h1>
+        <SesionButton />
+        <h2 className="text-center text-2xl font-bold mb-4">Catálogo</h2>
+        <ProfileAuth />
+        <PanelButton />
+      </div>
+      <PostsList />
+    </>
+  )
+}
 
-export default Inicio;
-
+export default Inicio

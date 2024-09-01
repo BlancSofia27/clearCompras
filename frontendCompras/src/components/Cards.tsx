@@ -17,12 +17,13 @@ interface CardsProps {
     category: string;
     brand: string;
     color: string;
+    userId: string;
   }>;
 }
 
 const Cards: React.FC<CardsProps> = ({ posts }) => {
   return (
-    <div className="grid grid-cols-3 gap-4">
+    <div className="grid grid-cols-4 gap-4">
       {posts.map(post => (
         <PostCard
           key={post.id}
@@ -35,6 +36,7 @@ const Cards: React.FC<CardsProps> = ({ posts }) => {
           category={post.category}
           brand={post.brand}
           color={post.color}
+          userId={post.userId}
         />
       ))}
     </div>

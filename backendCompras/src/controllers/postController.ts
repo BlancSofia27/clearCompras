@@ -45,9 +45,28 @@ export const createPost = async (req: Request, res: Response) => {
 };
 
 // Obtener todos los posts
-export const getPosts = async (_req: Request, res: Response) => {
+export const getPosts = async (req: Request, res: Response) => {
+  const { category, color, sortOrder } = req.query;
+
   try {
-    const posts = await Post.findAll();
+    // Construir el objeto de opciones para la consulta
+    const options: any = {};
+
+    // Aplicar filtros si se proporcionan
+    if (category) {
+      options.where = { ...options.where, category };
+    }
+    if (color) {
+      options.where = { ...options.where, color };
+    }
+
+    // Aplicar ordenamiento si se proporciona
+    if (sortOrder === 'asc' || sortOrder === 'desc') {
+      options.order = [['price', sortOrder]];
+    }
+
+    // Obtener los posts con las opciones especificadas
+    const posts = await Post.findAll(options);
     res.status(200).json(posts);
   } catch (error) {
     res.status(500).json({ error: 'Error al obtener los posts' });
@@ -124,3 +143,55 @@ export const getPostsByUserId = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+//filters
+export const getFilteredPosts = async (req: Request, res: Response) => {
+  // Extrae los parámetros de consulta
+  const { category, color, sortOrder } = req.query;
+
+  try {
+    // Configura las opciones de consulta para los filtros
+    const queryOptions: any = {
+      where: {
+        ...(category && { category }), // Filtra por categoría si se proporciona
+        ...(color && { color }),       // Filtra por color si se proporciona
+      },
+    };
+
+    // Aplica el ordenamiento si se proporciona
+    if (sortOrder) {
+      queryOptions.order = [['price', sortOrder === 'asc' ? 'ASC' : 'DESC']];
+    }
+
+    // Obtén las publicaciones con los filtros y ordenamientos aplicados
+    const posts = await Post.findAll(queryOptions);
+
+    return res.status(200).json(posts);
+  } catch (error) {
+    return res.status(500).json({ message: 'Error fetching posts', error });
+  }
+};
+
+// //obtiene los post por size 
+// export const getPostsBySize = async (req: Request, res: Response) => {
+//   const { size } = req.params; // Obtiene userId de los parámetros de la ruta
+
+//   try {
+//     // Busca los posts en la base de datos por userId usando Sequelize
+//     const posts = await Post.findAll({
+//       where: { size: size }
+//     });
+
+//     // Verifica si se encontraron posts
+//     if (posts.length === 0) {
+//       return res.status(404).json({ message: 'No posts found for this user.' });
+//     }
+
+//     // Envía los posts encontrados en la respuesta
+//     res.status(200).json(posts);
+//   } catch (error) {
+//     // Maneja errores
+//     console.error('Error fetching posts:', error);
+//     res.status(500).json({ message: 'Server error' });
+//   }
+// };

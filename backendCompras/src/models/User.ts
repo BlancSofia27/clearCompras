@@ -8,6 +8,9 @@ interface UserAttributes {
   email: string;
   businessName: string;
   whatsapp: string;
+  instagram: string;
+  logo: string;
+  header: string;
 }
 
 //interface UserCreationAttributes extends Optional<UserAttributes, 'id'> {}
@@ -17,6 +20,10 @@ class User extends Model<UserAttributes> implements UserAttributes {
   public email!: string;
   public businessName!: string;
   public whatsapp!: string;
+  public instagram!:string;
+  public logo!: string;
+  public header!: string;
+
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -37,6 +44,18 @@ User.init(
       allowNull: false,
     },
     whatsapp: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    instagram: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    logo: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    header: {
       type: DataTypes.STRING,
       allowNull: false,
     },

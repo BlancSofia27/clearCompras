@@ -20,7 +20,7 @@ const sizeSlice = createSlice({
 // Configura el store
 const store = configureStore({
   reducer: {
-    sizes: sizeSlice.reducer
+    sizes: sizeSlice.reducer,
   }
 });
 
