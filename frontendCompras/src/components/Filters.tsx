@@ -18,10 +18,11 @@ const Filters: React.FC<FiltersProps> = ({ setFilters }) => {
   }, [selectedCategory, selectedColor, sortOrder, setFilters]);
 
   return (
-    <div className="filters p-4 border rounded shadow-lg">
-      <h2 className="text-xl font-bold mb-4">Filtros</h2>
+    <div className="flex flex-col filters p-4 border rounded shadow-lg">
+      <h2 className="text-xl font-bold ">Filtros</h2>
+      <div className='flex flex-row p-2'>
 
-      <div className="mb-4">
+      <div className="mx-4 ">
         <label className="block mb-2 font-medium">Categoría:</label>
         <select
           value={selectedCategory}
@@ -37,7 +38,7 @@ const Filters: React.FC<FiltersProps> = ({ setFilters }) => {
         </select>
       </div>
 
-      <div className="mb-4">
+      <div className="mx-4">
         <label className="block mb-2 font-medium">Color:</label>
         <select
           value={selectedColor}
@@ -53,7 +54,7 @@ const Filters: React.FC<FiltersProps> = ({ setFilters }) => {
         </select>
       </div>
 
-      <div className="mb-4">
+      <div className="mx-4">
         <label className="block mb-2 font-medium">Ordenar por Precio:</label>
         <div className="flex gap-2">
           <button
@@ -69,6 +70,7 @@ const Filters: React.FC<FiltersProps> = ({ setFilters }) => {
             Precio: Alto a Bajo
           </button>
         </div>
+      </div>
       </div>
     </div>
   );

@@ -18,11 +18,11 @@ const ProfileAuth: React.FC = () => {
 
   return (
     isAuthenticated && user && (
-      <div>
-        <img src={user.picture} alt={user.name} />
-        <h2>{user.name}</h2>
-        <p>User ID: {user.sub}</p> {/* user.sub contiene el ID del usuario */}
-        <p>{user.email}</p>
+      <div className="flex flex-row p-4">
+        <img 
+        className="w-11 h-11 rounded-full"
+        src={user.picture} alt={user.name} />
+        <h2 className="p-2">{user.name}</h2>
       </div>
     )
   );

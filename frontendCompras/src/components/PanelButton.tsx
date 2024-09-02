@@ -21,7 +21,7 @@ const AdminButton: React.FC = () => {
       {isAuthenticated && (
         <button
           onClick={handleClick}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold p-3 rounded"
         >
           Ir al Panel de Administración
         </button>

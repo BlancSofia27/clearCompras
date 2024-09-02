@@ -1,6 +1,7 @@
 // src/controllers/postController.ts
 import { Request, Response } from 'express';
 import Post from '../models/Post';
+const { Op } = require('sequelize');
 
 // Crear post
 export const createPost = async (req: Request, res: Response) => {
@@ -44,15 +45,23 @@ export const createPost = async (req: Request, res: Response) => {
   }
 };
 
-// Obtener todos los posts
+//traer los posts /filtrarlos / busqueda
 export const getPosts = async (req: Request, res: Response) => {
-  const { category, color, sortOrder } = req.query;
+  const { title, category, color, sortOrder } = req.query;
 
   try {
     // Construir el objeto de opciones para la consulta
     const options: any = {};
 
     // Aplicar filtros si se proporcionan
+    if (title) {
+      options.where = {
+        ...options.where,
+        title: {
+          [Op.iLike]: `%${title}%`, // Buscar títulos que contengan el término de búsqueda (case-insensitive)
+        },
+      };
+    }
     if (category) {
       options.where = { ...options.where, category };
     }
@@ -171,27 +180,3 @@ export const getFilteredPosts = async (req: Request, res: Response) => {
     return res.status(500).json({ message: 'Error fetching posts', error });
   }
 };
-
-// //obtiene los post por size 
-// export const getPostsBySize = async (req: Request, res: Response) => {
-//   const { size } = req.params; // Obtiene userId de los parámetros de la ruta
-
-//   try {
-//     // Busca los posts en la base de datos por userId usando Sequelize
-//     const posts = await Post.findAll({
-//       where: { size: size }
-//     });
-
-//     // Verifica si se encontraron posts
-//     if (posts.length === 0) {
-//       return res.status(404).json({ message: 'No posts found for this user.' });
-//     }
-
-//     // Envía los posts encontrados en la respuesta
-//     res.status(200).json(posts);
-//   } catch (error) {
-//     // Maneja errores
-//     console.error('Error fetching posts:', error);
-//     res.status(500).json({ message: 'Server error' });
-//   }
-// };

@@ -13,6 +13,7 @@ const PostUser: React.FC = () => {
     userId: "",
     email: "",
     businessName: "",
+    direction:"",
     whatsapp: "",
     header: "",
     logo: "",
@@ -147,6 +148,24 @@ const PostUser: React.FC = () => {
             id="businessName"
             name="businessName"
             value={formData.businessName}
+            onChange={handleChange}
+            className="w-full p-2 border border-gray-300 rounded"
+            required
+          />
+        </div>
+
+        <div className="mb-4">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="direction"
+          >
+            Direccion
+          </label>
+          <input
+            type="text"
+            id="direction"
+            name="direction"
+            value={formData.direction}
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded"
             required

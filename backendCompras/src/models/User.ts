@@ -7,6 +7,7 @@ interface UserAttributes {
   userId: string;
   email: string;
   businessName: string;
+  direction:string;
   whatsapp: string;
   instagram: string;
   logo: string;
@@ -19,6 +20,7 @@ class User extends Model<UserAttributes> implements UserAttributes {
   public userId!: string;
   public email!: string;
   public businessName!: string;
+  public direction!:string;
   public whatsapp!: string;
   public instagram!:string;
   public logo!: string;
@@ -40,6 +42,10 @@ User.init(
       allowNull: false,
     },
     businessName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    direction: {
       type: DataTypes.STRING,
       allowNull: false,
     },

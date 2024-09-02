@@ -18,6 +18,6 @@ router.get("/:id", getPostById) // Obtener un post por ID
 router.put("/:id", updatePost) // Actualizar un post por ID
 router.delete("/:id", deletePost) // Eliminar un post por ID
 router.get("/:userId", getPostsByUserId)
-router.get("/:category?/:color?", getFilteredPosts)
+//router.get("/:category?/:color?", getFilteredPosts)
 
 export default router

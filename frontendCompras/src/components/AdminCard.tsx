@@ -107,27 +107,27 @@ const MyCard: React.FC<MyAdminCard> = ({
   };
 
   return (
-    <div className="flex flex-col w-full max-w-sm mx-auto my-4 bg-white shadow-lg rounded-lg overflow-hidden">
-      <div className="h-72 mb-4">
+    <div className="flex flex-col w-full max-w-sm m-4 bg-white shadow-lg rounded-lg overflow-hidden">
+      <div className="h-48 mb-4">
         <Slider {...settings}>
           {images.map((img, index) => (
-            <div key={index} className="relative h-full">
+            <div key={index} className="relative ">
               <img
                 src={img}
                 alt={`Image ${index}`}
-                className="w-full h-full object-cover"
+                className="w-full h-[320px] object-cover"
               />
             </div>
           ))}
         </Slider>
       </div>
 
-      <div className="p-4 mt-[270px]">
+      <div className="p-4 mt-[120px]">
         <h2 className="text-xl font-semibold mb-2">{title}</h2>
         <p className="text-gray-700 text-lg mb-2">${price}</p>
-        <h4>ID:{id}</h4>
+        
         <div className="mb-2">
-          <p className="text-gray-600 mb-2">Talle</p>
+          <p className="text-gray-600 mb-2">Talles</p>
           <div className="flex flex-wrap gap-2">
             {size.map((s, index) => (
               <span

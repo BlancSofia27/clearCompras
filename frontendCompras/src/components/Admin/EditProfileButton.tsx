@@ -9,6 +9,7 @@ interface User {
   userId: string;
   email: string;
   businessName: string;
+  direction: string;
   whatsapp: string;
   header: string;
   logo: string;
@@ -25,6 +26,7 @@ const EditProfileButton: React.FC = () => {
     userId: '',
     email: '',
     businessName: '',
+    direction:'',
     whatsapp: '',
     header: '',
     logo: '',
@@ -142,6 +144,17 @@ const EditProfileButton: React.FC = () => {
               name="businessName"
               placeholder="Nombre del Negocio"
               value={formData.businessName}
+              onChange={handleInputChange}
+              className="border p-2 rounded"
+            />
+          </label>
+          <label className="flex flex-col">
+            Direccion del Negocio:
+            <input
+              type="text"
+              name="direction"
+              placeholder="Direccion del negocio"
+              value={formData.direction}
               onChange={handleInputChange}
               className="border p-2 rounded"
             />

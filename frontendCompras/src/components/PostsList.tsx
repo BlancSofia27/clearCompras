@@ -1,84 +1,104 @@
 // src/components/PostsList.tsx
-import React, { useState, useEffect } from 'react';
-import MyCard from './PostCard'; // Asegúrate de usar el nombre correcto
-import Filters from './Filters';
-import ReactPaginate from 'react-paginate';
+import React, { useState, useEffect } from "react"
+import PostCard from "./PostCard"
+import Filters from "./Filters"
+import SearchBar from "./SearchBar"
+import ReactPaginate from "react-paginate"
 
-type SortOrder = 'asc' | 'desc';
+type SortOrder = "asc" | "desc"
 
 interface Filters {
-  category: string;
-  color: string;
-  sortOrder: SortOrder;
+  category: string
+  color: string
+  sortOrder: SortOrder
+}
+
+interface Post {
+  id: string
+  title: string
+  price: number
+  imageUrl: string
+  imageUrl1?: string
+  imageUrl2?: string
+  size: string[]
+  category: string
+  brand: string
+  color: string
+  userId: string
 }
 
 const PostsList: React.FC = () => {
-  const [posts, setPosts] = useState<any[]>([]);
-  const [filteredPosts, setFilteredPosts] = useState<any[]>([]);
-  const [currentPage, setCurrentPage] = useState<number>(0);
+  const [posts, setPosts] = useState<Post[]>([])
+  const [filteredPosts, setFilteredPosts] = useState<Post[]>([])
+  const [currentPage, setCurrentPage] = useState<number>(0)
   const [filters, setFilters] = useState<Filters>({
-    category: '',
-    color: '',
-    sortOrder: 'asc',
-  });
-  const postsPerPage = 10;
+    category: "",
+    color: "",
+    sortOrder: "asc",
+  })
+  const [searchTerm, setSearchTerm] = useState<string>("")
+  const postsPerPage = 10
 
   useEffect(() => {
-    fetchPosts();
-  }, [filters]);
+    fetchPosts()
+  }, [filters, searchTerm])
 
   useEffect(() => {
-    applyFilters();
-  }, [posts, filters]);
+    applyFilters()
+  }, [posts, filters, searchTerm])
 
   const fetchPosts = async () => {
-    const { category, color, sortOrder } = filters;
+    const { category, color, sortOrder } = filters
     try {
-      const response = await fetch(`http://localhost:3000/api/post?category=${category}&color=${color}&sortOrder=${sortOrder}`);
+      const response = await fetch(
+        `http://localhost:3000/api/post?title=${searchTerm}&category=${category}&color=${color}&sortOrder=${sortOrder}`
+      )
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error("Network response was not ok")
       }
-      const data = await response.json();
-      setPosts(data);
+      const data = await response.json()
+      console.log("Fetched posts:", data)
+      setPosts(data)
     } catch (err) {
-      console.error('Error fetching posts:', err);
+      console.error("Error fetching posts:", err)
     }
-  };
+  }
 
   const applyFilters = () => {
-    let filtered = [...posts];
+    let filtered = [...posts]
 
     if (filters.category) {
-      filtered = filtered.filter((post) => post.category === filters.category);
+      filtered = filtered.filter((post) => post.category === filters.category)
     }
 
     if (filters.color) {
-      filtered = filtered.filter((post) => post.color === filters.color);
+      filtered = filtered.filter((post) => post.color === filters.color)
     }
 
-    if (filters.sortOrder === 'asc') {
-      filtered = filtered.sort((a, b) => a.price - b.price);
-    } else if (filters.sortOrder === 'desc') {
-      filtered = filtered.sort((a, b) => b.price - a.price);
+    if (filters.sortOrder === "asc") {
+      filtered = filtered.sort((a, b) => a.price - b.price)
+    } else if (filters.sortOrder === "desc") {
+      filtered = filtered.sort((a, b) => b.price - a.price)
     }
 
-    setFilteredPosts(filtered);
-  };
+    setFilteredPosts(filtered)
+  }
 
   const handlePageChange = (selectedItem: { selected: number }) => {
-    setCurrentPage(selectedItem.selected);
-  };
+    setCurrentPage(selectedItem.selected)
+  }
 
-  const offset = currentPage * postsPerPage;
-  const currentPosts = filteredPosts.slice(offset, offset + postsPerPage);
+  const offset = currentPage * postsPerPage
+  const currentPosts = filteredPosts.slice(offset, offset + postsPerPage)
 
   return (
     <div>
+      <SearchBar setSearchTerm={setSearchTerm} />
       <Filters setFilters={setFilters} />
 
-      <div className="card-list grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+      <div className="card-list grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
         {currentPosts.length > 0 ? (
-          currentPosts.map((post) => <MyCard key={post.id} post={post} />)
+          currentPosts.map((post) => <PostCard key={post.id} post={post} />)
         ) : (
           <p>No hay publicaciones disponibles.</p>
         )}
@@ -104,7 +124,7 @@ const PostsList: React.FC = () => {
         activeClassName={"active"}
       />
     </div>
-  );
-};
+  )
+}
 
-export default PostsList;
+export default PostsList
