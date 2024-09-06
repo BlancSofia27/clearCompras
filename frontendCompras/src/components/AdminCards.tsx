@@ -1,42 +1,35 @@
 // src/components/Cards.tsx
 import React from 'react';
-import MyProfileCard from './AdminCard';
+import AdminCard from './AdminCard';
 
 
 
-// Componente de lista de tarjetas
-interface CardsProps {
-  posts: Array<{
-    id: string;
-    title: string;
-    price: string;
-    imageUrl: string;
-    imageUrl1: string;
-    imageUrl2: string;
-    size: string;
-    category: string;
-    brand: string;
-    color: string;
-  }>;
+interface Post {
+  id: string;
+  title: string;
+  price: string;
+  imageUrl: string;
+  imageUrl1: string;
+  imageUrl2: string;
+  size: string;
+  category: string;
+  brand: string;
+  color: string;
 }
 
-const AdminCards: React.FC<CardsProps> = ({ posts }) => {
+interface ProfileCardsProps {
+  posts: Post[];
+}
+
+const AdminCards: React.FC<ProfileCardsProps> = ({ posts }) => {
+  if (!posts || posts.length === 0) {
+    return <div className="text-center">No hay publicaciones para mostrar.</div>;
+  }
+
   return (
-    <div className="grid grid-cols-4 gap-4">
+    <div className="grid xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
       {posts.map(post => (
-        <MyProfileCard
-          key={post.id}
-          id={post.id}
-          title={post.title}
-          price={post.price}
-          imageUrl={post.imageUrl}
-          imageUrl1={post.imageUrl1}
-          imageUrl2={post.imageUrl2}
-          size={post.size}
-          category={post.category}
-          brand={post.brand}
-          color={post.color}
-        />
+        <AdminCard key={post.id} post={post} />
       ))}
     </div>
   );

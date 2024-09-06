@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import PostCard from './PostCard';
+import Loader from './Loader';
 
 // Define la interfaz User
 interface User {
@@ -58,7 +59,7 @@ const Cards: React.FC<CardsProps> = ({ posts }) => {
     fetchUsers();
   }, [posts]);
 
-  if (loading) return <p>Cargando...</p>;
+  if (loading) return <Loader/>;
   if (error) return <p>{error}</p>;
 
   return (

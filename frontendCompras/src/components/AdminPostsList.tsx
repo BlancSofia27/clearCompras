@@ -1,58 +1,134 @@
-import React, { useEffect, useState } from "react"
-import axios from "axios"
-import { useAuth0 } from "@auth0/auth0-react"
-import AdminCards from "./AdminCards"
+import React, { useState, useEffect } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
+import Filters from "./Filters";
+import SearchBar from "./SearchBar";
+import ReactPaginate from "react-paginate";
+import AdminCard from "./AdminCard";
 
-// Define la interfaz para los datos del post
+type SortOrder = "asc" | "desc";
+
+interface Filters {
+  category: string;
+  color: string;
+  sortOrder: SortOrder;
+}
+
 interface Post {
-  id: string
-  title: string
-  price: string
-  imageUrl: string
-  imageUrl1: string
-  imageUrl2: string
-  size: string
-  category: string
-  brand: string
-  color: string
+  id: string;
+  title: string;
+  price: number;
+  imageUrl: string;
+  imageUrl1?: string;
+  imageUrl2?: string;
+  size: string[];
+  category: string;
+  brand: string;
+  color: string;
+  userId: string;
 }
 
 const AdminPostsList: React.FC = () => {
-  const { user, isAuthenticated } = useAuth0()
-  const [posts, setPosts] = useState<Post[]>([])
-  const [loading, setLoading] = useState<boolean>(true)
-  const [error, setError] = useState<string | null>(null)
+  const { user, isAuthenticated } = useAuth0(); // Usa useAuth0 para obtener el usuario
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(0);
+  const [filters, setFilters] = useState<Filters>({
+    category: "",
+    color: "",
+    sortOrder: "asc",
+  });
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const postsPerPage = 10;
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      if (isAuthenticated && user) {
-        setLoading(true) // Indica que la carga ha comenzado
-        setError(null) // Resetea cualquier error previo
+    if (isAuthenticated && user?.sub) {
+      fetchPosts(user.sub); // Usa user.sub en lugar de userId de params
+    }
+  }, [filters, searchTerm, isAuthenticated, user?.sub]);
 
-        try {
-          const userId = user.sub // Obtén el userId del usuario autenticado
-          const response = await axios.get(
-            `http://localhost:3000/api/post?userId=${userId}`
-          )
-          setPosts(response.data) // Guarda los posts en el estado
-        } catch (err) {
-          console.error("Error fetching posts:", err)
-          setError(
-            "Error al cargar las publicaciones. Inténtalo de nuevo más tarde."
-          )
-        } finally {
-          setLoading(false) // Indica que la carga ha terminado
-        }
+  useEffect(() => {
+    applyFilters();
+  }, [posts, filters, searchTerm]);
+
+  const fetchPosts = async (userId: string) => {
+    const { category, color, sortOrder } = filters;
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/post?userId=${userId}&title=${searchTerm}&category=${category}&color=${color}&sortOrder=${sortOrder}`
+      );
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
       }
+      const data = await response.json();
+      console.log("Fetched posts:", data);
+      setPosts(data);
+    } catch (err) {
+      console.error("Error fetching posts:", err);
+    }
+  };
+
+  const applyFilters = () => {
+    let filtered = [...posts];
+
+    if (filters.category) {
+      filtered = filtered.filter((post) => post.category === filters.category);
     }
 
-    fetchPosts()
-  }, [isAuthenticated, user])
+    if (filters.color) {
+      filtered = filtered.filter((post) => post.color === filters.color);
+    }
 
-  if (loading) return <div>Loading...</div>
-  if (error) return <div>{error}</div>
+    if (filters.sortOrder === "asc") {
+      filtered = filtered.sort((a, b) => a.price - b.price);
+    } else if (filters.sortOrder === "desc") {
+      filtered = filtered.sort((a, b) => b.price - a.price);
+    }
 
-  return <AdminCards posts={posts} />
-}
+    setFilteredPosts(filtered);
+  };
 
-export default AdminPostsList
+  const handlePageChange = (selectedItem: { selected: number }) => {
+    setCurrentPage(selectedItem.selected);
+  };
+
+  const offset = currentPage * postsPerPage;
+  const currentPosts = filteredPosts.slice(offset, offset + postsPerPage);
+
+  return (
+    <div className="bg-gray-100 w-full flex flex-col">
+      <SearchBar setSearchTerm={setSearchTerm} />
+      <div className="flex flex-row w-auto">
+        <Filters setFilters={setFilters} />
+      </div>
+      <div className="justify-center card-list grid sm:grid-cols-3 xs:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:gap-4 xl:p-4 xs:p-1">
+        {currentPosts.length > 0 ? (
+          currentPosts.map((post) => <AdminCard key={post.id} post={post} />)
+        ) : (
+          <div className="p-20 text-center justify-center"></div>
+        )}
+      </div>
+
+      <ReactPaginate
+        previousLabel={"Anterior"}
+        nextLabel={"Siguiente"}
+        breakLabel={"..."}
+        pageCount={Math.ceil(filteredPosts.length / postsPerPage)}
+        marginPagesDisplayed={2}
+        pageRangeDisplayed={5}
+        onPageChange={handlePageChange}
+        containerClassName="flex justify-center items-center space-x-2 my-4"
+        pageClassName="inline-block"
+        pageLinkClassName="xs:text-xs bg-celeste text-white px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 transition duration-200"
+        previousClassName="inline-block"
+        previousLinkClassName="xs:text-xs bg-celeste text-white px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 transition duration-200"
+        nextClassName="inline-block"
+        nextLinkClassName="xs:text-xs bg-celeste text-white px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 transition duration-200"
+        breakClassName="inline-block"
+        breakLinkClassName="px-4 py-2 text-gray-700"
+        activeClassName="bg-blue-500 text-white rounded-lg"
+      />
+    </div>
+  );
+};
+
+export default AdminPostsList;

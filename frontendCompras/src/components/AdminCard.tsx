@@ -7,6 +7,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 
 interface MyAdminCard {
+  post:{
   id: string;
   title: string;
   price: string;
@@ -17,10 +18,12 @@ interface MyAdminCard {
   category: string;
   brand: string;
   color: string;
+  };
 }
 
-const MyCard: React.FC<MyAdminCard> = ({
-  id,
+const MyCard: React.FC<MyAdminCard> = ({post}) => {
+  const {
+    id,
   title,
   price,
   imageUrl,
@@ -30,7 +33,8 @@ const MyCard: React.FC<MyAdminCard> = ({
   category,
   brand,
   color,
-}) => {
+} =post; 
+
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [editedTitle, setEditedTitle] = useState(title);
   const [editedPrice, setEditedPrice] = useState(price);
@@ -39,9 +43,10 @@ const MyCard: React.FC<MyAdminCard> = ({
   const [editedColor, setEditedColor] = useState(color);
   const [selectedSizes, setSelectedSizes] = useState<string[]>(size);
 
-  const sizes = ["Único", "S", "M", "L", "XL", "XXL"];
+  const sizes = ["Único", "S", "M", "L", "XL", "XXL","34","36","37","38","39","40","41","42"];
   const categories = [
     "Remeras",
+    "Polleras",
     "Top Casual",
     "Jeans",
     "Pantalones",
@@ -51,7 +56,7 @@ const MyCard: React.FC<MyAdminCard> = ({
     "Deportivo",
     "Noche y Fiesta",
   ];
-  const colors = ["Negro", "Blanco", "Rojo", "Azul", "Rosa", "Marron", "Verde"];
+  const colors = ["Negro", "Blanco", "Rojo", "Azul", "Rosa", "Marron", "Verde","Violeta"];
 
   const settings = {
     dots: true,
@@ -106,59 +111,103 @@ const MyCard: React.FC<MyAdminCard> = ({
     }
   };
 
+  const handleDelete = async () => {
+    try {
+      // Muestra el SweetAlert2 de confirmación
+      const result = await Swal.fire({
+        title: "¿Queres Eliminar el Producto?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Eliminar"
+      });
+  
+      // Verifica si la confirmación es afirmativa
+      if (result.isConfirmed) {
+        // Ejecuta la solicitud de eliminación
+        await axios.delete(`http://localhost:3000/api/post/${id}`);
+  
+        // Muestra la notificación de éxito
+        await Swal.fire({
+          title: "¡Eliminado!",
+          text: "El producto se ha eliminado correctamente.",
+          icon: "success",
+          timer: 3000,
+          showConfirmButton: false,
+        });
+  
+        // Actualiza la interfaz o redirige después de un corto período
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
+      }
+    } catch (error) {
+      console.error("Error al eliminar el producto", error);
+      // Muestra la notificación de error
+      await Swal.fire({
+        title: "Error",
+        text: "Hubo un problema al eliminar el producto.",
+        icon: "error",
+      });
+    }
+  };
+
   return (
-    <div className="flex flex-col w-full max-w-sm m-4 bg-white shadow-lg rounded-lg overflow-hidden">
-      <div className="h-48 mb-4">
+    <div className="flex flex-col xl:w-[220px] xl:h-[550px] xs:w-[150px] xs:h-[300px] max-w-sm m-4 bg-white shadow-lg rounded-lg overflow-hidden">
+      <div className=" flex justify-between">
+        <button
+          onClick={() => setModalIsOpen(true)}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold text-xs px-3 "
+        >
+          Editar
+        </button>
+        <button
+          onClick={handleDelete}
+          className="bg-red-500 hover:bg-red-700 text-white font-bold text-xs p-2 "
+        >
+          X
+        </button>
+      </div>
+      <div className="xl:h-[290px] mb-4">
         <Slider {...settings}>
           {images.map((img, index) => (
             <div key={index} className="relative ">
               <img
                 src={img}
                 alt={`Image ${index}`}
-                className="w-full h-[320px] object-cover"
+                className="xl:w-[220px] xl:h-[290px] xs:h-[200px] xs:w-[150px] object-cover"
               />
             </div>
           ))}
         </Slider>
       </div>
 
-      <div className="p-4 mt-[120px]">
-        <h2 className="text-xl font-semibold mb-2">{title}</h2>
-        <p className="text-gray-700 text-lg mb-2">${price}</p>
+      <div className="p-4 mt-[2px]">
+        <h2 className="text-md font-semibold">{title}</h2>
+        <p className="text-gray-700 text-lg">${price}</p>
         
         <div className="mb-2">
-          <p className="text-gray-600 mb-2">Talles</p>
-          <div className="flex flex-wrap gap-2">
+          <p className="text-gray-600 text-xs ">Talles</p>
+          <div className="flex flex-wrap gap-1">
             {size.map((s, index) => (
               <span
                 key={index}
-                className="bg-gray-200 text-gray-700 px-2 py-1 rounded"
+                className="bg-gray-200 xs:text-xs xs:px-1 text-gray-700 px-2 py-1 rounded"
               >
                 {s}
               </span>
             ))}
           </div>
         </div>
-        <p className="text-blue-600 mb-2 font-semibold">Categoría</p>
-        <p className="text-gray-600 mb-2">{category || "No especificada"}</p>
-        <p className="text-gray-600 mb-2">Marca: {brand}</p>
-        <p className="text-gray-600 mb-2">Color: {color || "No especificado"}</p>
+
+
+        <p className="text-gray-600 text-xs">Categoria:{category || "No especificada"}</p>
+        <p className="text-gray-600 text-xs">Marca: {brand}</p>
+        <p className="text-gray-600 text-xs">Color: {color || "No especificado"}</p>
+        <p className="text-gray-600 text-xs">ID:{id}</p>
       </div>
 
-      <div className="p-4 flex justify-between">
-        <button
-          onClick={() => setModalIsOpen(true)}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        >
-          Editar
-        </button>
-        <button
-          onClick={handleEdit}
-          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-        >
-          Eliminar
-        </button>
-      </div>
 
       <Modal
         isOpen={modalIsOpen}

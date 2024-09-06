@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAuth0 } from '@auth0/auth0-react';
 import EditProfileButton from './Admin/EditProfileButton';
+import Loader from './Loader';
 
 interface User {
   userId: string;
@@ -38,7 +39,7 @@ const Profile: React.FC = () => {
   }, [user]);
 
   if (isLoading) {
-    return <div className="text-center">Loading...</div>;
+    return <Loader/>;
   }
 
   if (!isAuthenticated) {
@@ -46,7 +47,7 @@ const Profile: React.FC = () => {
   }
 
   if (loading) {
-    return <div className="text-center">Loading profile...</div>;
+    return <Loader/>;
   }
 
   if (error) {
@@ -58,20 +59,20 @@ const Profile: React.FC = () => {
   }
 
   return (
-    <div className="relative max-w-full mx-auto bg-white shadow-md rounded-lg">
+    <div className="relative max-w-full mx-auto bg-slate text-gray-800 shadow-md rounded-lg">
       {/* Header */}
-      <div className="relative w-full h-[400px]">
+      <div className="relative w-full xl:h-[400px] xs:h-[150px] ">
         <img
           src={profile.header}
           alt="Header"
           width={223} height={400}
           className="w-full h-full object-cover rounded-t-lg"
         />
-        <div className="absolute inset-0 flex justify-start items-center">
+        <div className="absolute inset-0 flex justify-start mt-[70px]">
           <img
             src={profile.logo}
             alt="Logo"
-            className="w-[200px] h-[200px] ml-7 rounded-full border-2 border-gray-300"
+            className="xl:w-[200px] xl:h-[200px] xs:w-[100px] xs:h-[100px] ml-7 rounded-full border-2 border-gray-300"
             style={{ marginTop: 'calc(16% - 2rem)' }}
           />
         </div>
@@ -79,12 +80,12 @@ const Profile: React.FC = () => {
 
       {/* User Information */}
       <div className="p-4 mt-8">
-        <h1 className="text-3xl font-bold my-2">{profile.businessName}</h1>
+        <h1 className="xs:text-xl xl:text-3xl font-bold xl:my-2 text-white">{profile.businessName}</h1>
 
         {/* Additional Profile Information */}
-        <p>Email: {profile.email}</p>
-        <p>WhatsApp: {profile.whatsapp}</p>
-        <p>Instagram: {profile.instagram}</p>
+        <p className='font-semibold py-1 xs:text-xs'>Email: {profile.email}</p>
+        <p className='font-semibold py-1 xs:text-xs'>WhatsApp:+{profile.whatsapp}</p>
+        <p className='font-semibold py-1 xs:text-xs'>Instagram: {profile.instagram}</p>
         <EditProfileButton/>
       </div>
     </div>

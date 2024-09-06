@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import SearchBar from './SearchBar';
 
 // Opciones de color y categoría (definidos estáticamente)
-const categories = ["Remeras", "Top Casual", "Jeans", "Pantalones", "Camperas y Buzos", "Zapatos", "Bikinis", "Deportivo", "Noche y Fiesta"];
-const colors = ["Negro", "Blanco", "Rojo", "Azul", "Rosa", "Marron", "Verde"];
+const categories = ["Remeras","Polleras", "Top Casual", "Jeans", "Pantalones", "Camperas y Buzos", "Zapatos", "Bikinis", "Deportivo", "Noche y Fiesta"];
+const colors = ["Negro", "Blanco", "Rojo", "Azul", "Rosa", "Marron", "Verde","Violeta"];
 
 interface FiltersProps {
   setFilters: React.Dispatch<React.SetStateAction<{ category: string; color: string; sortOrder: 'asc' | 'desc'; }>>;
@@ -18,16 +19,15 @@ const Filters: React.FC<FiltersProps> = ({ setFilters }) => {
   }, [selectedCategory, selectedColor, sortOrder, setFilters]);
 
   return (
-    <div className="flex flex-col filters p-4 border rounded shadow-lg">
-      <h2 className="text-xl font-bold ">Filtros</h2>
-      <div className='flex flex-row p-2'>
+    <div className="flex  filters xs:p-1 xl:p-4 border rounded shadow-lg w-full justify-center aling-center">
+      <div className='flex xs:flex-col lg:flex-row md:flex-row xl:flex-row p-2'>
 
       <div className="mx-4 ">
-        <label className="block mb-2 font-medium">Categoría:</label>
+        <label className="xs:text-xs mb-2 font-medium">Filtrar por Categoría:</label>
         <select
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
-          className="border p-2 rounded w-full"
+          className="border xl:p-2 rounded w-full"
         >
           <option value="">Seleccionar Categoría</option>
           {categories.map((category) => (
@@ -39,11 +39,11 @@ const Filters: React.FC<FiltersProps> = ({ setFilters }) => {
       </div>
 
       <div className="mx-4">
-        <label className="block mb-2 font-medium">Color:</label>
+        <label className="xs:text-xs mb-2 font-medium">Filtrar por Color:</label>
         <select
           value={selectedColor}
           onChange={(e) => setSelectedColor(e.target.value)}
-          className="border p-2 rounded w-full"
+          className="border xl:p-2 rounded w-full"
         >
           <option value="">Seleccionar Color</option>
           {colors.map((color) => (
@@ -55,17 +55,17 @@ const Filters: React.FC<FiltersProps> = ({ setFilters }) => {
       </div>
 
       <div className="mx-4">
-        <label className="block mb-2 font-medium">Ordenar por Precio:</label>
+        <label className="xs:text-xs block mb-2 font-medium">Ordenar por Precio:</label>
         <div className="flex gap-2">
           <button
             onClick={() => setSortOrder('asc')}
-            className={`px-4 py-2 border rounded ${sortOrder === 'asc' ? 'bg-blue-500 text-white' : 'bg-white text-blue-500'}`}
+            className={`xs:p-1 xs:text-xs xl:px-4 xl:py-2 border rounded ${sortOrder === 'asc' ? 'bg-blue-500 text-white' : 'bg-white text-blue-500'}`}
           >
             Precio: Bajo a Alto
           </button>
           <button
             onClick={() => setSortOrder('desc')}
-            className={`px-4 py-2 border rounded ${sortOrder === 'desc' ? 'bg-blue-500 text-white' : 'bg-white text-blue-500'}`}
+            className={`xs:p-1 xs:text-xs xl:px-4 xl:py-2 border rounded ${sortOrder === 'desc' ? 'bg-blue-500 text-white' : 'bg-white text-blue-500'}`}
           >
             Precio: Alto a Bajo
           </button>

@@ -92,37 +92,38 @@ const PostsList: React.FC = () => {
   const currentPosts = filteredPosts.slice(offset, offset + postsPerPage)
 
   return (
-    <div>
+    <div className="w-full flex flex-col">
       <SearchBar setSearchTerm={setSearchTerm} />
+      <div className="flex flex-row w-auto">
       <Filters setFilters={setFilters} />
-
-      <div className="card-list grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
+      </div>
+      <div className="justify-center card-list grid sm:grid-cols-3 xs:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:gap-4 xl:p-4 xs:p-1">
         {currentPosts.length > 0 ? (
           currentPosts.map((post) => <PostCard key={post.id} post={post} />)
         ) : (
-          <p>No hay publicaciones disponibles.</p>
+          <div className="p-20 text-center justify-center"></div>
         )}
       </div>
 
       <ReactPaginate
-        previousLabel={"< Anterior"}
-        nextLabel={"Siguiente >"}
-        breakLabel={"..."}
-        pageCount={Math.ceil(filteredPosts.length / postsPerPage)}
-        marginPagesDisplayed={2}
-        pageRangeDisplayed={5}
-        onPageChange={handlePageChange}
-        containerClassName={"pagination"}
-        pageClassName={"page-item"}
-        pageLinkClassName={"page-link"}
-        previousClassName={"page-item"}
-        previousLinkClassName={"page-link"}
-        nextClassName={"page-item"}
-        nextLinkClassName={"page-link"}
-        breakClassName={"page-item"}
-        breakLinkClassName={"page-link"}
-        activeClassName={"active"}
-      />
+  previousLabel={"Anterior"}
+  nextLabel={"Siguiente"}
+  breakLabel={"..."}
+  pageCount={Math.ceil(filteredPosts.length / postsPerPage)}
+  marginPagesDisplayed={2}
+  pageRangeDisplayed={5}
+  onPageChange={handlePageChange}
+  containerClassName="flex justify-center items-center space-x-2 my-4"
+  pageClassName="inline-block"
+  pageLinkClassName="xs:text-xs bg-celeste text-white px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 transition duration-200"
+  previousClassName="inline-block"
+  previousLinkClassName="xs:text-xs bg-celeste text-white px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 transition duration-200"
+  nextClassName="inline-block"
+  nextLinkClassName="xs:text-xs bg-celeste text-white px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 transition duration-200"
+  breakClassName="inline-block"
+  breakLinkClassName="px-4 py-2 text-gray-700"
+  activeClassName="bg-blue-500 text-white rounded-lg"
+/>
     </div>
   )
 }

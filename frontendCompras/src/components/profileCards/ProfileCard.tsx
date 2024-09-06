@@ -3,10 +3,10 @@ import "slick-carousel/slick/slick-theme.css";
 import React, { useState } from "react";
 import Slider from "react-slick";
 
-import Swal from "sweetalert2";
 
 interface MyProfileCard {
-  id: string;
+  post:{
+    id: string;
   title: string;
   price: string;
   imageUrl: string;
@@ -16,10 +16,12 @@ interface MyProfileCard {
   category: string;
   brand: string;
   color: string;
+  };
 }
 
-const MyCard: React.FC<MyProfileCard> = ({
-  id,
+const MyCard: React.FC<MyProfileCard> = ({post}) =>{
+  const {
+    id,
   title,
   price,
   imageUrl,
@@ -28,7 +30,8 @@ const MyCard: React.FC<MyProfileCard> = ({
   size,
   category,
   brand,
-}) => {
+  }= post;
+
   
 
   const settings = {
@@ -45,23 +48,23 @@ const MyCard: React.FC<MyProfileCard> = ({
  
 
   return (
-    <div className="flex flex-col w-full max-w-sm mx-auto my-4 bg-white shadow-lg rounded-lg overflow-hidden">
-      <div className="h-72 mb-4">
+    <div className="flex flex-col xl:w-[300px] xl:h-[600px]  xs:w-[160px] max-w-sm mx-auto my-4 bg-white shadow-lg rounded-lg overflow-hidden">
+      <div className="h-48 mb-4">
         <Slider {...settings}>
           {images.map((img, index) => (
-            <div key={index} className="relative h-full">
+            <div key={index} className="relative">
               <img
                 src={img}
                 alt={`Image ${index}`}
-                className="w-full h-full object-cover"
+                className="w-full xl:h-[370px] xs:h-[200px] object-cover"
               />
             </div>
           ))}
         </Slider>
       </div>
 
-      <div className="p-4 mt-[270px]">
-        <h2 className="text-xl font-semibold mb-2">{title}</h2>
+      <div className="p-4 xl:mt-[180px] xs:mt-2">
+        <h2 className="text-center xl:text-xl xs:text-sm font-semibold mb-2">{title}</h2>
         <p className="text-gray-700 text-lg mb-2">${price}</p>
         <div className="mb-2">
           <p className="text-gray-600 mb-2">Talle</p>
@@ -76,9 +79,7 @@ const MyCard: React.FC<MyProfileCard> = ({
             ))}
           </div>
         </div>
-        <p className="text-blue-600 mb-2 font-semibold">Categoría</p>
-        <p className="text-gray-600 mb-2">{category || "No especificada"}</p>
-        <p className="text-gray-600 mb-2">Marca: {brand}</p>
+        <p className="text-gray-600 mb-2 xs:text-xs xl:text-md">Marca: {brand}</p>
       </div>
     </div>
   );

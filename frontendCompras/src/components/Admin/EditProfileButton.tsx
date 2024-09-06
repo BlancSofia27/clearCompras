@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import axios from 'axios';
 import { useAuth0 } from '@auth0/auth0-react';
-import { uploadFile } from '../../firebase/config'; // Importar la función uploadFile
+import { uploadFile, deleteFile } from '../../firebase/config'; // Importar la función uploadFile y deleteFile
 import Swal from 'sweetalert2';
 
 interface User {
@@ -26,7 +26,7 @@ const EditProfileButton: React.FC = () => {
     userId: '',
     email: '',
     businessName: '',
-    direction:'',
+    direction: '',
     whatsapp: '',
     header: '',
     logo: '',
@@ -52,14 +52,15 @@ const EditProfileButton: React.FC = () => {
     }
   }, [modalIsOpen]);
 
-
-
-
-
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>, fieldName: keyof User) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      
+
+      // Eliminar el archivo existente si se cambia
+      if (formData[fieldName]) {
+        await deleteFile(formData[fieldName]);
+      }
+
       try {
         const url = await uploadFile(file); // Usa la función uploadFile
         setFormData(prevData => ({ ...prevData, [fieldName]: url }));
@@ -105,7 +106,7 @@ const EditProfileButton: React.FC = () => {
     <div>
       <button
         onClick={() => setModalIsOpen(true)}
-        className="px-4 py-2 bg-blue-500 text-white rounded-lg"
+        className="xl:px-4 xl:py-2 xs:p-2 xs:text-xs xl:text-md my-2 bg-blue-500 text-white rounded-lg"
       >
         Editar datos
       </button>
@@ -114,82 +115,91 @@ const EditProfileButton: React.FC = () => {
         isOpen={modalIsOpen}
         onRequestClose={() => setModalIsOpen(false)}
         contentLabel="Edit Profile"
-        className="bg-white p-8 rounded-lg shadow-lg max-w-lg mx-auto my-20"
+        className="bg-white p-2 rounded-lg shadow-lg max-w-3xl mx-auto my-20 xl:h-[600px] xs:w-[320px] xs:h-[800px]"
         overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
       >
-        <h2 className="text-2xl font-semibold mb-4">Editar Perfil</h2>
-        <form className="flex flex-col gap-4">
-          <label className="flex flex-col">
-            Header:
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => handleFileChange(e, 'header')}
-              className="border p-2 rounded"
-            />
-          </label>
-          <label className="flex flex-col">
-            Logo:
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => handleFileChange(e, 'logo')}
-              className="border p-2 rounded"
-            />
-          </label>
-          <label className="flex flex-col">
-            Nombre del Negocio:
-            <input
-              type="text"
-              name="businessName"
-              placeholder="Nombre del Negocio"
-              value={formData.businessName}
-              onChange={handleInputChange}
-              className="border p-2 rounded"
-            />
-          </label>
-          <label className="flex flex-col">
-            Direccion del Negocio:
-            <input
-              type="text"
-              name="direction"
-              placeholder="Direccion del negocio"
-              value={formData.direction}
-              onChange={handleInputChange}
-              className="border p-2 rounded"
-            />
-          </label>
-          <label className="flex flex-col">
-            WhatsApp:
-            <input
-              type="text"
-              name="whatsapp"
-              placeholder="WhatsApp"
-              value={formData.whatsapp}
-              onChange={handleInputChange}
-              className="border p-2 rounded"
-            />
-          </label>
-          <label className="flex flex-col">
-            Instagram:
-            <input
-              type="text"
-              name="instagram"
-              placeholder="Instagram"
-              value={formData.instagram}
-              onChange={handleInputChange}
-              className="border p-2 rounded"
-            />
-          </label>
-          <button
-            type="button"
-            onClick={handleEdit}
-            className={`px-4 py-2 bg-blue-500 text-white rounded-lg ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
-            disabled={loading}
-          >
-            {loading ? 'Guardando...' : 'Guardar Cambios'}
-          </button>
-        </form>
+        <div className="flex h-full w-full">
+         
+
+          {/* Contenido del formulario */}
+          <div className="w-full p-4 overflow-y-auto">
+            <h2 className="text-2xl font-semibold mb-4">Editar Perfil</h2>
+            <form className="flex flex-col gap-4">
+              <label className="flex flex-col mb-4">
+                Header:
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleFileChange(e, 'header')}
+                  className="border p-2 rounded"
+                />
+                {formData.header && <img src={formData.header} alt="Header preview" className="mt-2 max-w-full h-auto" />}
+              </label>
+              <label className="flex flex-col mb-4">
+                Logo:
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleFileChange(e, 'logo')}
+                  className="border p-2 rounded"
+                />
+                {formData.logo && <img src={formData.logo} alt="Logo preview" className="mt-2 max-w-full h-auto" />}
+              </label>
+              <label className="flex flex-col mb-4">
+                Nombre del Negocio:
+                <input
+                  type="text"
+                  name="businessName"
+                  placeholder="Nombre del Negocio"
+                  value={formData.businessName}
+                  onChange={handleInputChange}
+                  className="border p-2 rounded"
+                />
+              </label>
+              <label className="flex flex-col mb-4">
+                Dirección del Negocio:
+                <input
+                  type="text"
+                  name="direction"
+                  placeholder="Dirección del negocio"
+                  value={formData.direction}
+                  onChange={handleInputChange}
+                  className="border p-2 rounded"
+                />
+              </label>
+              <label className="flex flex-col mb-4">
+                WhatsApp:
+                <input
+                  type="text"
+                  name="whatsapp"
+                  placeholder="WhatsApp"
+                  value={formData.whatsapp}
+                  onChange={handleInputChange}
+                  className="border p-2 rounded"
+                />
+              </label>
+              <label className="flex flex-col mb-4">
+                Instagram:
+                <input
+                  type="text"
+                  name="instagram"
+                  placeholder="Instagram"
+                  value={formData.instagram}
+                  onChange={handleInputChange}
+                  className="border p-2 rounded"
+                />
+              </label>
+              <button
+                type="button"
+                onClick={handleEdit}
+                className={`px-4 py-2 bg-blue-500 text-white rounded-lg ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                disabled={loading}
+              >
+                {loading ? 'Guardando...' : 'Guardar Cambios'}
+              </button>
+            </form>
+          </div>
+        </div>
       </Modal>
     </div>
   );

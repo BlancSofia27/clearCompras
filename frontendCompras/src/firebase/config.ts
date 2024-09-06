@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { v4 as uuidv4 } from 'uuid';
 
 const firebaseConfig = {
@@ -26,6 +26,18 @@ export async function uploadFile(file: File): Promise<string> {
     return url;
   } catch (error) {
     console.error('Error subiendo el archivo:', error);
+    throw error;
+  }
+}
+
+export async function deleteFile(fileUrl: string): Promise<void> {
+  try {
+    // Obtener la referencia del archivo desde la URL
+    const fileRef = ref(storage, fileUrl);
+    await deleteObject(fileRef);
+    console.log('Archivo eliminado exitosamente:', fileUrl);
+  } catch (error) {
+    console.error('Error eliminando el archivo:', error);
     throw error;
   }
 }

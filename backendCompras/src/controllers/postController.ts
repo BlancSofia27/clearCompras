@@ -47,7 +47,7 @@ export const createPost = async (req: Request, res: Response) => {
 
 //traer los posts /filtrarlos / busqueda
 export const getPosts = async (req: Request, res: Response) => {
-  const { title, category, color, sortOrder } = req.query;
+  const { title, category, color, sortOrder, userId } = req.query;
 
   try {
     // Construir el objeto de opciones para la consulta
@@ -68,6 +68,9 @@ export const getPosts = async (req: Request, res: Response) => {
     if (color) {
       options.where = { ...options.where, color };
     }
+    if (userId) {
+      options.where = { ...options.where, userId }; // Filtrar por userId
+    }
 
     // Aplicar ordenamiento si se proporciona
     if (sortOrder === 'asc' || sortOrder === 'desc') {
@@ -79,19 +82,6 @@ export const getPosts = async (req: Request, res: Response) => {
     res.status(200).json(posts);
   } catch (error) {
     res.status(500).json({ error: 'Error al obtener los posts' });
-  }
-};
-
-// Obtener post por ID
-export const getPostById = async (req: Request, res: Response) => {
-  try {
-    const post = await Post.findByPk(req.params.id);
-    if (!post) {
-      return res.status(404).json({ error: 'Post no encontrado' });
-    }
-    res.status(200).json(post);
-  } catch (error) {
-    res.status(500).json({ error: 'Error al obtener el post' });
   }
 };
 
@@ -130,53 +120,46 @@ export const deletePost = async (req: Request, res: Response) => {
  * @param {Response} res - La respuesta HTTP.
  * @param {NextFunction} next - La función de siguiente middleware.
  */
-export const getPostsByUserId = async (req: Request, res: Response) => {
-  const { userId } = req.params; // Obtiene userId de los parámetros de la ruta
 
-  try {
-    // Busca los posts en la base de datos por userId usando Sequelize
-    const posts = await Post.findAll({
-      where: { userId: userId }
-    });
 
-    // Verifica si se encontraron posts
-    if (posts.length === 0) {
-      return res.status(404).json({ message: 'No posts found for this user.' });
-    }
+// export const getPostsByUserId = async (req: Request, res: Response) => {
+//   const { userId } = req.params;
+//   const { category, color, title, sortOrder = 'asc', page = 1, limit = 10 } = req.query;
 
-    // Envía los posts encontrados en la respuesta
-    res.status(200).json(posts);
-  } catch (error) {
-    // Maneja errores
-    console.error('Error fetching posts:', error);
-    res.status(500).json({ message: 'Server error' });
-  }
-};
+//   // Convertir `sortOrder` a 'asc' o 'desc'
+//   const order: 'asc' | 'desc' = sortOrder === 'desc' ? 'desc' : 'asc';
 
-//filters
-export const getFilteredPosts = async (req: Request, res: Response) => {
-  // Extrae los parámetros de consulta
-  const { category, color, sortOrder } = req.query;
+//   // Convertir `page` y `limit` a números
+//   const currentPage = parseInt(page as string, 10);
+//   const pageSize = parseInt(limit as string, 10);
 
-  try {
-    // Configura las opciones de consulta para los filtros
-    const queryOptions: any = {
-      where: {
-        ...(category && { category }), // Filtra por categoría si se proporciona
-        ...(color && { color }),       // Filtra por color si se proporciona
-      },
-    };
+//   try {
+//     console.log(userId);
+    
+//     // Buscar los posts en la base de datos con filtros aplicados
+//     const posts = await Post.findAndCountAll({
+//       where: {
+//         userId,
+//         ...(category && { category }),
+//         ...(color && { color }),
+//         ...(title && { title: { [Op.iLike]: `%${title}%` } }) // Usa el operador 'iLike' para búsqueda insensible a mayúsculas/minúsculas
+//       },
+//       order: [['price', order]], // Asegúrate de que 'price' sea el nombre de campo correcto
+//       limit: pageSize,
+//       offset: (currentPage - 1) * pageSize,
+//     });
 
-    // Aplica el ordenamiento si se proporciona
-    if (sortOrder) {
-      queryOptions.order = [['price', sortOrder === 'asc' ? 'ASC' : 'DESC']];
-    }
+//     // Envía los posts encontrados en la respuesta
+//     res.status(200).json({
+//       posts: posts.rows,
+//       totalPages: Math.ceil(posts.count / pageSize),
+//       currentPage,
+//     });
+//   } catch (error) {
+//     // Maneja errores
+//     console.error('Error fetching posts:', error);
+//     res.status(500).json({ message: 'Server error' });
+//   }
+// };
 
-    // Obtén las publicaciones con los filtros y ordenamientos aplicados
-    const posts = await Post.findAll(queryOptions);
 
-    return res.status(200).json(posts);
-  } catch (error) {
-    return res.status(500).json({ message: 'Error fetching posts', error });
-  }
-};
