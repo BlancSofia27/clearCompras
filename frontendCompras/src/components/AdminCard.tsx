@@ -55,6 +55,7 @@ const MyCard: React.FC<MyAdminCard> = ({post}) => {
     "Bikinis",
     "Deportivo",
     "Noche y Fiesta",
+    "Otros"
   ];
   const colors = ["Negro", "Blanco", "Rojo", "Azul", "Rosa", "Marron", "Verde","Violeta"];
 

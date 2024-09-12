@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import SearchBar from './SearchBar';
 
 // Opciones de color y categoría (definidos estáticamente)
-const categories = ["Remeras","Polleras", "Top Casual", "Jeans", "Pantalones", "Camperas y Buzos", "Zapatos", "Bikinis", "Deportivo", "Noche y Fiesta"];
+const categories = ["Remeras","Polleras", "Top Casual", "Jeans", "Pantalones", "Camperas y Buzos", "Zapatos", "Bikinis", "Deportivo", "Noche y Fiesta","Otros"];
 const colors = ["Negro", "Blanco", "Rojo", "Azul", "Rosa", "Marron", "Verde","Violeta"];
 
 interface FiltersProps {
